@@ -42,6 +42,16 @@ async function run() {
       res.send(result);
     });
 
+    app.get("/my-facilities", async (req, res) => {
+      const email = req.query.email;
+
+      const result = await facilitiesCollection
+        .find({ owner_email: email })
+        .toArray();
+
+      res.send(result);
+    });
+
     app.get("/facilities/:id", async (req, res) => {
       const id = req.params.id;
 
@@ -57,6 +67,50 @@ async function run() {
       });
 
       res.send(result);
+    });
+
+    app.patch("/facilities/:id", async (req, res) => {
+      const id = req.params.id;
+      const updatedData = req.body;
+
+      if (!ObjectId.isValid(id)) {
+        return res.status(400).send({
+          success: false,
+          message: "Invalid facility id",
+        });
+      }
+
+      const result = await facilitiesCollection.updateOne(
+        { _id: new ObjectId(id) },
+        {
+          $set: updatedData,
+        }
+      );
+
+      res.send({
+        success: true,
+        result,
+      });
+    });
+
+    app.delete("/facilities/:id", async (req, res) => {
+      const id = req.params.id;
+
+      if (!ObjectId.isValid(id)) {
+        return res.status(400).send({
+          success: false,
+          message: "Invalid facility id",
+        });
+      }
+
+      const result = await facilitiesCollection.deleteOne({
+        _id: new ObjectId(id),
+      });
+
+      res.send({
+        success: true,
+        result,
+      });
     });
 
     app.post("/bookings", async (req, res) => {
@@ -91,32 +145,31 @@ async function run() {
       res.send(result);
     });
 
-
     app.patch("/bookings/:id", async (req, res) => {
-  const id = req.params.id;
+      const id = req.params.id;
 
-  if (!ObjectId.isValid(id)) {
-    return res.status(400).send({
-      success: false,
-      message: "Invalid booking id",
+      if (!ObjectId.isValid(id)) {
+        return res.status(400).send({
+          success: false,
+          message: "Invalid booking id",
+        });
+      }
+
+      const result = await bookingsCollection.updateOne(
+        { _id: new ObjectId(id) },
+        {
+          $set: {
+            status: "cancelled",
+            updated_at: new Date(),
+          },
+        }
+      );
+
+      res.send({
+        success: true,
+        result,
+      });
     });
-  }
-
-  const result = await bookingsCollection.updateOne(
-    { _id: new ObjectId(id) },
-    {
-      $set: {
-        status: "cancelled",
-        updated_at: new Date(),
-      },
-    }
-  );
-
-  res.send({
-    success: true,
-    result,
-  });
-});
 
     await client.db("admin").command({ ping: 1 });
     console.log("✅ MongoDB connected successfully");
