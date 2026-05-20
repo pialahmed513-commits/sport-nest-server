@@ -473,6 +473,4 @@ app.get("/", (req, res) => {
   res.send("SportNest server is running");
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+module.exports = app;
