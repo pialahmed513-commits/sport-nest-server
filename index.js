@@ -297,8 +297,24 @@ async function run() {
     });
 
     app.get("/facilities", async (req, res) => {
-      const result = await facilitiesCollection.find().toArray();
-      res.send(result);
+      try {
+        const realFacilities = await facilitiesCollection.find().toArray();
+        let finalFacilities = [...realFacilities];
+
+        if (finalFacilities.length > 0) {
+          while (finalFacilities.length < 6) {
+            finalFacilities = [...finalFacilities, ...realFacilities];
+          }
+        }
+
+        res.send(finalFacilities);
+      } catch (error) {
+        res.status(500).send({
+          success: false,
+          message: "Failed to fetch facilities",
+          error: error.message,
+        });
+      }
     });
 
     app.post("/facilities", async (req, res) => {
