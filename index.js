@@ -18,10 +18,7 @@ const uri = process.env.MONGO_URI;
 
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173", 
-      "https://sport-nest-server-pi.vercel.app" 
-    ],
+    origin: ["http://localhost:5173"],
     credentials: true,
   })
 );
@@ -464,7 +461,7 @@ async function run() {
     });
 
     await client.db("admin").command({ ping: 1 });
-    console.log("✅ MongoDB connected successfully");
+    console.log("MongoDB connected successfully");
   } catch (error) {
     console.log("MongoDB connection error:", error.message);
   }
