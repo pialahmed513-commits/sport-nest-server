@@ -20,7 +20,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173", 
-      "https://sport-nest-server-pi.vercel.app/" 
+      "https://sport-nest-server-pi.vercel.app" 
     ],
     credentials: true,
   })
