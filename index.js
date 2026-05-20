@@ -18,7 +18,7 @@ const uri = process.env.MONGO_URI;
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "https://sport-nest-server-pi.vercel.app/",
     credentials: true,
   })
 );
