@@ -469,8 +469,8 @@ async function run() {
 
 run();
 
-app.get("/", (req, res) => {
-  res.send("SportNest server is running");
+app.get("/test", (req, res) => {
+  res.send("Database connection is working!");
 });
 
 module.exports = app;
