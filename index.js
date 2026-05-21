@@ -16,12 +16,18 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const uri = process.env.MONGO_URI;
 
+
 app.use(
   cors({
-    origin: ["http://localhost:5173"],
+    origin: function (origin, callback) {
+      callback(null, true);
+    },
     credentials: true,
+    methods: ["GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "x-csrf-token"],
   })
 );
+
 
 app.use(express.json());
 app.use(cookieParser());
@@ -469,8 +475,16 @@ async function run() {
 
 run();
 
+app.get("/", (req, res) => {
+  res.send("SportNest server is running");
+});
+
 app.get("/test", (req, res) => {
   res.send("Database connection is working!");
+});
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
 
 module.exports = app;
